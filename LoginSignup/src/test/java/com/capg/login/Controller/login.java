@@ -18,21 +18,26 @@ class login {
 	static UserBean bean;
 
 	@Test
-	void testValdateUserName() {
+	void testValdateUserName() 
+	{
 		assertEquals(true, service.valdateUserName("DanishSharma"));		
 	}
 
-@Test
-void testValidateUserPassword() {
-	assertEquals(true, service.validateUserPassword("Danish@1234"));
-}
-@Test
-	void testValidateUserEmail() {
-	assertEquals(true, service.validateUserEmail("dan@gmail.com"));
+	@Test
+	void testValidateUserPassword() 
+	{
+		assertEquals(true, service.validateUserPassword("Danish@1234"));
+	}
+	
+	@Test
+	void testValidateUserEmail() 
+	{
+		assertEquals(true, service.validateUserEmail("dan@gmail.com"));
 	}
 
 	@Test
-	void testValidateUserPhoneNo() {
+	void testValidateUserPhoneNo() 
+	{
 		assertEquals(true, service.validateUserPhoneNo(9827327306l));
 	}
 }

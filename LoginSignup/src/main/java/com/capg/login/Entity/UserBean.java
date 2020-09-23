@@ -74,12 +74,6 @@ public class UserBean {
 		this.userEmail = userEmail;
 	}
 	
-	@Override
-	public String toString() 
-	{
-		return "UserBean [userId=" + userId + ", userName=" + userName + ", password=" + password
-				+ ", userPhone=" + userPhone + ", userEmail=" + userEmail + "]";
-	}
 	
 	@Override
 	public int hashCode() 

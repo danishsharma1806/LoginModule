@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cap.login.exceptions.InvalidInputException;
+import com.cap.login.exceptions.UserException;
 import com.capg.login.Entity.UserBean;
 import com.capg.login.Service.IUserService;
 
@@ -21,10 +21,19 @@ public class LoginController {
 	IUserService service;
 
 	@PostMapping("user/reg")
-	public String addUsers(@RequestBody  UserBean bean) 
+	public String addUsers(@RequestBody UserBean bean) throws UserException
 	{   
-		UserBean bean1=service.addNewUser(bean);
+		UserBean bean1;
+		try
+		{
+			bean1=service.addNewUser(bean);
+		}
+		catch(UserException e)
+		{
+			return e.getMessage();
+		}
 		return "Hello " +bean1+"Sucessfully Registered";
+		
 	}
 
 	@GetMapping("/adminlogin/{name}/{password}")   
@@ -37,25 +46,42 @@ public class LoginController {
 	}
 		 
 	@GetMapping("/userLogin/{name}/{password}")
-	public String userLogin(@PathVariable String name,@PathVariable String password)throws InvalidInputException 
+	public String userLogin(@PathVariable String name,@PathVariable String password) throws UserException
 	{		
-		List<UserBean> bean2= service.userLogin(name, password);	
+		List<UserBean> bean2;
+		try
+		{
+			System.out.println(name);
+			String regexUsername="[(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$])]{8,}";
+			String regexPassword="[(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$])]{8,}";
+			if(name==null && password==null)
+				throw new UserException("Username or password cannot be null");
+			if(name.matches(regexUsername))
+				throw new UserException("Invalid Username input");
+			if(password.matches(regexPassword))
+				throw new UserException("Invalid Password input");
+			bean2= service.userLogin(name, password);	
+		}
+		
+		catch(UserException e)
+		{
+			return e.getMessage();
+		}
 		boolean flag=false;
 		for(UserBean userbean: bean2) 
 		{
-			if(name==null||password==null) 
-			{
-				throw new InvalidInputException("name or password cannot be Empty");
-			}
-			else if(userbean.getUserName().equals(name.trim())&&userbean.getPassword().equals(password.trim())) 
+			if(userbean.getUserName().equals(name.trim())&&userbean.getPassword().equals(password.trim())) 
 			{
 				flag=true;
 				break;
 			}
 		}
+		
 		if(flag==true)
+		{
 			return("Login Sucessfully......!!!");
-	
+		}
+		
 		return "Invalid name or password! Try Again...! If not a user please Register.";
 	}
 	
@@ -68,82 +94,3 @@ public class LoginController {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*@GetMapping("/Login1/{name}/{password}")
-public String logg(@PathVariable String name,@PathVariable String password) {
-	String been=service.loggs(name, password);
-	
-	return "Invalid name or password";
-
-}*/
